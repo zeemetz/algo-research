@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us"><head>
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+   <title>SimpleCaptcha - Installing</title>
+   <meta name="author" content="">
+   <meta name="description" content="SimpleCaptcha - A CAPTCHA library for Java 1.5 and Java 6">
+   <meta name="keywords" content="captcha, java, j2ee, library, grails, java 1.5, java 6">
+
+   <!-- Blueprint CSS Framework -->
+   <link rel="stylesheet" href="SimpleCaptcha%20-%20Installing_files/screen.css" type="text/css" media="screen, projection">
+   <link rel="stylesheet" href="SimpleCaptcha%20-%20Installing_files/print.css" type="text/css" media="print">
+
+   <!-- CodeRay syntax highlighting CSS -->
+   <link rel="stylesheet" href="SimpleCaptcha%20-%20Installing_files/coderay.css" type="text/css">
+
+    <link rel="stylesheet" href="SimpleCaptcha%20-%20Installing_files/twilight.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="SimpleCaptcha%20-%20Installing_files/spacecadet.css" type="text/css" media="screen, projection">
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="SimpleCaptcha%20-%20Installing_files/site.css" type="text/css" media="screen, projection">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="column span-20 prepend-2 append-2 first last" id="header">
+        <p class="title">SimpleCaptcha</p>
+        <hr>
+    </div>
+
+   <div class="column span-14 prepend-2 first">
+      <h2>Installing</h2>
+<p>The process for installing SimpleCaptcha is no different than 
+installing most other libraries for a J2EE container: a jar is deployed 
+to WEB-INF/lib and web.xml is updated. These steps are described for 
+reference below.</p>
+<ol>
+	<li>Download SimpleCaptcha</li>
+	<li>Copy the SimpleCaptcha jar file to your WEB-INF/lib directory</li>
+	<li>Add servlet mappings to web.xml. Four servlets are provided for you: <code>StickyCaptchaServlet</code>, <code>SimpleCaptchaServlet</code>, <code>ChineseCaptchaServlet</code>, and <code>AudioCaptchaServlet</code>. All generate CAPTCHA challenge/answer pairs, but <code>StickyCaptchaServlet</code> and <code>ChineseCaptchaServlet</code>
+ are “sticky” to the user’s session: page reloads will render the same 
+CAPTCHA instead of generating a new one. An example mapping for 
+StickyCaptchaServlet:</li>
+</ol>
+<div class="CodeRay">
+<pre>    <span class="ta">&lt;servlet&gt;</span>
+        <span class="ta">&lt;servlet-name&gt;</span>StickyCaptcha<span class="ta">&lt;/servlet-name&gt;</span>
+        <span class="ta">&lt;servlet-class&gt;</span>nl.captcha.servlet.StickyCaptchaServlet<span class="ta">&lt;/servlet-class&gt;</span>
+        <span class="er">&lt;</span>!-- The width and height params are optional; 
+        if unspecified they default to 200 and 50 respectively. --!<span class="er">&gt;</span>
+        <span class="ta">&lt;init-param&gt;</span>
+            <span class="ta">&lt;param-name&gt;</span>width<span class="ta">&lt;/param-name&gt;</span>
+            <span class="ta">&lt;param-value&gt;</span>250<span class="ta">&lt;/param-value&gt;</span>
+        <span class="ta">&lt;/init-param&gt;</span>
+        <span class="ta">&lt;init-param&gt;</span>
+            <span class="ta">&lt;param-name&gt;</span>height<span class="ta">&lt;/param-name&gt;</span>
+            <span class="ta">&lt;param-value&gt;</span>75<span class="ta">&lt;/param-value&gt;</span>
+        <span class="ta">&lt;/init-param&gt;</span>
+    <span class="ta">&lt;/servlet&gt;</span>
+
+    <span class="ta">&lt;servlet-mapping&gt;</span>
+        <span class="ta">&lt;servlet-name&gt;</span>StickyCaptcha<span class="ta">&lt;/servlet-name&gt;</span>
+        <span class="ta">&lt;url-pattern&gt;</span>/stickyImg<span class="ta">&lt;/url-pattern&gt;</span>
+    <span class="ta">&lt;/servlet-mapping&gt;</span>
+
+</pre>
+</div>
+<p>And for <code>AudioCaptchaServlet</code>:</p>
+<div class="CodeRay">
+<pre>    <span class="ta">&lt;servlet&gt;</span>
+        <span class="ta">&lt;servlet-name&gt;</span>AudioCaptcha<span class="ta">&lt;/servlet-name&gt;</span>
+        <span class="ta">&lt;servlet-class&gt;</span>nl.captcha.servlet.AudioCaptchaServlet<span class="ta">&lt;/servlet-class&gt;</span>
+    <span class="ta">&lt;/servlet&gt;</span>
+
+     <span class="ta">&lt;servlet-mapping&gt;</span>
+        <span class="ta">&lt;servlet-name&gt;</span>AudioCaptcha<span class="ta">&lt;/servlet-name&gt;</span>
+        <span class="ta">&lt;url-pattern&gt;</span>/audio.wav<span class="ta">&lt;/url-pattern&gt;</span>
+    <span class="ta">&lt;/servlet-mapping&gt;</span>
+ 
+</pre>
+</div>
+<ol start="4">
+<li>Restart your webserver.</li>
+<li>Browse to one of the locations given by the <code>url-pattern</code>s defined in <code>web.xml</code>, e.g., <code>http://localhost:8080/stickyImg</code>. If everything has been set up correctly you should see/hear a CAPTCHA challenge.</li>
+<li>Now create a JSP called <code>captcha.jsp</code>. For an image CAPTCHA, add the following code inside the <code>&lt;body&gt;</code> element:</li></ol>
+
+<div class="CodeRay">
+<pre>    <span class="ta">&lt;img</span> <span class="an">src</span>=<span class="s"><span class="dl">"</span><span class="k">/stickyImg</span><span class="dl">"</span></span> <span class="ta">/&gt;</span>
+    <span class="ta">&lt;form</span> <span class="an">action</span>=<span class="s"><span class="dl">"</span><span class="k">/captchaSubmit.jsp</span><span class="dl">"</span></span> <span class="an">method</span>=<span class="s"><span class="dl">"</span><span class="k">post</span><span class="dl">"</span></span><span class="ta">&gt;</span>
+        <span class="ta">&lt;input</span> <span class="an">name</span>=<span class="s"><span class="dl">"</span><span class="k">answer</span><span class="dl">"</span></span> <span class="ta">/&gt;</span>
+    <span class="ta">&lt;/form&gt;</span>
+
+</pre>
+</div>
+<p>Or for an audio CAPTCHA:</p>
+<div class="CodeRay">
+<pre>    <span class="ta">&lt;audio</span> <span class="an">controls</span> <span class="an">autoplay</span> <span class="an">src</span>=<span class="s"><span class="dl">"</span><span class="k">/audio.wav</span><span class="dl">"</span></span><span class="ta">&gt;</span><span class="ta">&lt;/audio&gt;</span>
+    <span class="ta">&lt;form</span> <span class="an">action</span>=<span class="s"><span class="dl">"</span><span class="k">/captchaSubmit.jsp</span><span class="dl">"</span></span> <span class="an">method</span>=<span class="s"><span class="dl">"</span><span class="k">post</span><span class="dl">"</span></span><span class="ta">&gt;</span>
+        <span class="ta">&lt;input</span> <span class="an">name</span>=<span class="s"><span class="dl">"</span><span class="k">answer</span><span class="dl">"</span></span> <span class="ta">/&gt;</span>
+    <span class="ta">&lt;/form&gt;</span>
+</pre>
+</div>
+<ol start="7">
+<li>Create another JSP called <code>captchaSubmit.jsp</code>. Add the following:</li></ol>
+<div class="CodeRay">
+<pre>    &lt;%<span class="ex">@</span> page import=<span class="s"><span class="dl">"</span><span class="k">nl.captcha.Captcha</span><span class="dl">"</span></span> %&gt;
+    ...
+    &lt;% <span class="c">// We're doing this in a JSP here, but in your own app you'll want to put</span>
+    <span class="c">// this logic in your MVC framework of choice.</span>
+    <span class="co">Captcha</span> captcha = (<span class="co">Captcha</span>) session.getAttribute(<span class="co">Captcha</span>.<span class="co">NAME</span>);
+    <span class="c">// Or, for an AudioCaptcha:</span>
+    <span class="c">// AudioCaptcha captcha = (AudioCaptcha) session.getAttribute(Captcha.NAME);</span>
+    request.setCharacterEncoding(<span class="s"><span class="dl">"</span><span class="k">UTF-8</span><span class="dl">"</span></span>); <span class="c">// Do this so we can capture non-Latin chars</span>
+    <span class="pt">String</span> answer = request.getParameter(<span class="s"><span class="dl">"</span><span class="k">answer</span><span class="dl">"</span></span>);
+    <span class="r">if</span> (captcha.isCorrect(answer)) { %&gt;
+        &lt;b&gt;<span class="co">Correct</span>!&lt;/b&gt;
+    &lt;% } %&gt;
+
+</pre>
+</div>
+<ol start="8">
+<li>Browse to <code>/captcha.jsp</code>. You should get your CAPTCHA image, as well as a form for entering your answer. Submit the form and see what happens.</li></ol>
+   </div>
+
+   <div class="column prepend-1 span-6 last">
+        <h4><a href="http://simplecaptcha.sourceforge.net/index.html">Home</a></h4>
+        <h4>Download SimpleCaptcha</h4>
+        <ul>
+            <li><a href="http://sourceforge.net/projects/simplecaptcha/files/simplecaptcha-1.2.1.jar/download">SimpleCaptcha for Java 6</a></li>
+            <li><a href="http://sourceforge.net/projects/simplecaptcha/files/simplecaptcha-1.2-jdk1.5.jar/download">SimpleCaptcha for Java 1.5</a></li>
+        </ul>
+        <h4><a href="http://simplecaptcha.sourceforge.net/installing.html">Installing</a></h4>
+        <h4>Customizing</h4>
+        <ul>
+          <li><a href="http://simplecaptcha.sourceforge.net/custom_images.html">Custom Image CAPTCHAs</a></li>
+          <li><a href="http://simplecaptcha.sourceforge.net/custom_audio.html">Custom Audio CAPTCHAs</a></li>
+        </ul>
+        <h4>Example Applications</h4>
+        <ul>
+            <li><a href="http://simplecaptcha.sourceforge.net/samples.html">Running</a></li>
+            <li><a href="http://sourceforge.net/projects/simplecaptcha/files/SimpleCaptcha/1.1.1/Sample%20Apps/simplecaptcha-grails-example.war/download">Download Grails Example</a></li>
+            <li><a href="http://sourceforge.net/projects/simplecaptcha/files/simplecaptcha-1.2-j2ee-sample.war/download">Download J2EE Example</a></li>
+        </ul>
+        <h4>Source</h4>
+        <ul>
+            <li><a href="http://simplecaptcha.sourceforge.net/building.html">Building From Source</a></li>
+            <li><a href="https://sourceforge.net/scm/?type=git&amp;group_id=147810">Get Source Code</a></li>
+            <li><a href="http://simplecaptcha.git.sourceforge.net/git/gitweb.cgi?p=simplecaptcha/simplecaptcha;a=summary">Browse Repository</a></li>
+        </ul>
+        <h4><a href="http://simplecaptcha.sourceforge.net/javadocs/index.html">Javadocs</a></h4>
+    </div>
+<!-- Piwik -->
+<script type="text/javascript">
+var pkBaseURL = (("https:" == document.location.protocol) ? "https://sourceforge.net/apps/piwik/simplecaptcha/" : "http://sourceforge.net/apps/piwik/simplecaptcha/");
+document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="SimpleCaptcha%20-%20Installing_files/piwik.js" type="text/javascript"></script><script type="text/javascript">
+try {
+var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 1);
+piwikTracker.trackPageView();
+piwikTracker.enableLinkTracking();
+} catch( err ) {}
+</script><noscript><p><img src="http://sourceforge.net/apps/piwik/simplecaptcha/piwik.php?idsite=1" style="border:0" alt=""/></p></noscript>
+<!-- End Piwik Tag -->
+
+
+</div></body></html>
